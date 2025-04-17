@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Task Manager</title>
+  <style>
+    body { font-family: Arial; max-width: 600px; margin: 30px auto; }
+    input, button { padding: 8px; margin: 5px 0; width: 100%; }
+    .task { border: 1px solid #ccc; padding: 10px; margin: 5px 0; border-radius: 5px; }
+  </style>
+</head>
+<body>
+  <h2>📝 Task Manager</h2>
+  <input id="search" placeholder="Search by title..." oninput="loadTasks()" />
+  <input id="title" placeholder="Task Title" />
+  <input id="description" placeholder="Task Description" />
+  <button onclick="addTask()">Add Task</button>
+  <button onclick="deleteAll_task()">Delete All Tasks</button>
+
+  <h3>📋 Your Tasks:</h3>
+  <div id="tasks"></div>
+
+  <script>
+    const API = "http://127.0.0.1:5000/tasks";
+
+    function loadTasks() {
+  const query = document.getElementById("search").value.toLowerCase();
+  fetch(API)
+    .then(res => res.json())
+    .then(tasks => {
+      document.getElementById("tasks").innerHTML = "";
+      tasks
+        .filter(task => task.title.toLowerCase().includes(query))
+        .forEach(task => {
+          const div = document.createElement("div");
+          div.className = "task";
+          div.innerHTML = `
+            <strong>${task.title}</strong><br>
+            ${task.description}<br>
+            🕒 Created: ${new Date(task.created_at).toLocaleString()}<br>
+            ✅ Completed: ${task.completed}<br>
+            <button onclick="deleteTask('${task.id}')">🗑️ Delete</button>
+            <button onclick="markComplete('${task.id}')">✔️ Toggle Complete</button>
+          `;
+          document.getElementById("tasks").appendChild(div);
+        });
+    });
+}
+
+    function addTask() {
+      const title = document.getElementById("title").value;
+      const description = document.getElementById("description").value;
+
+      fetch(API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title, description })
+      }).then(() => {
+        document.getElementById("title").value = "";
+        document.getElementById("description").value = "";
+        loadTasks();
+      });
+    }
+
+    function deleteTask(id) {
+      fetch(`${API}/${id}`, { method: "DELETE" })
+        .then(() => loadTasks());
+    }
+
+    function markComplete(id) {
+      fetch(`${API}`, { method: "GET" })
+        .then(res => res.json())
+        .then(tasks => {
+          const task = tasks.find(t => t.id === id);
+          return fetch(`${API}/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ completed: !task.completed })
+          });
+        })
+        .then(() => loadTasks());
+    }
+
+    function deleteAll_task() {
+      fetch(`${API}`, { method: "DELETE" })
+        .then(() => loadTasks());
+    }
+
+    loadTasks();
+  </script>
+</body>
+</html>
