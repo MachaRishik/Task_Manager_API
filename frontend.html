@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Task Manager</title>
   <style>
     body { font-family: sans-serif; padding: 2rem; background: #f4f4f4; }
@@ -37,7 +37,9 @@
   <ul id="taskList"></ul>
 
   <script>
-    const API_URL = "http://task-manager-byqlp0yy1-macharishiks-projects.vercel.app";
+    // Replace with your real backend URL
+    const BASE_API = "https://task-manager-api-26et.onrender.com";
+    const API_URL = `${BASE_API}/tasks`;
 
     async function fetchTasks() {
       const res = await fetch(API_URL);
