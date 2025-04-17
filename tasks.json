@@ -1,1 +1,10 @@
-[]
+[
+  {
+    "id": "a3c4c974-0888-479e-b89f-a44ca1939d4e",
+    "title": "Updated Task Title",
+    "description": "Updated via Postman!",
+    "completed": false,
+    "created_at": "2025-04-18T00:40:13.118826",
+    "updated_at": "2025-04-18T00:40:13.118838"
+  }
+]
