@@ -35,18 +35,15 @@
   </form>
 
   <ul id="taskList"></ul>
-
   <script>
-    // Replace with your real backend URL
-    const BASE_API = "https://task-manager-api-26et.onrender.com";
-    const API_URL = `${BASE_API}/tasks`;
-
+    const BASE_API = "hhttps://task-manager-api-26et.onrender.com/tasks";
+  
     async function fetchTasks() {
-      const res = await fetch(API_URL);
+      const res = await fetch(BASE_API);
       const tasks = await res.json();
       displayTasks(tasks);
     }
-
+  
     function displayTasks(tasks) {
       const list = document.getElementById("taskList");
       list.innerHTML = "";
@@ -63,12 +60,12 @@
         list.appendChild(li);
       });
     }
-
+  
     document.getElementById("taskForm").addEventListener("submit", async e => {
       e.preventDefault();
       const title = document.getElementById("title").value;
       const description = document.getElementById("description").value;
-      await fetch(API_URL, {
+      await fetch(BASE_API, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title, description })
@@ -76,26 +73,26 @@
       e.target.reset();
       fetchTasks();
     });
-
+  
     document.getElementById("clearAll").addEventListener("click", async () => {
-      await fetch(API_URL, { method: "DELETE" });
+      await fetch(BASE_API, { method: "DELETE" });
       fetchTasks();
     });
-
+  
     async function toggleComplete(id, status) {
-      await fetch(`${API_URL}/${id}`, {
+      await fetch(`${BASE_API}/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ completed: status })
       });
       fetchTasks();
     }
-
+  
     async function deleteTask(id) {
-      await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+      await fetch(`${BASE_API}/${id}`, { method: "DELETE" });
       fetchTasks();
     }
-
+  
     fetchTasks();
   </script>
 </body>
